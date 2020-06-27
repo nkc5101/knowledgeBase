@@ -5,7 +5,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+@Entity
 public class Notes {
+	@Id
 	private String name;
 	private String note;
 	private ArrayList<URL> links;
