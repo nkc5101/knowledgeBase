@@ -1,14 +1,19 @@
 package com.knowledge.base.model;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import org.springframework.web.multipart.MultipartFile;
 @Entity
 public class Notes {
 	@Id
@@ -44,10 +49,10 @@ public class Notes {
 		}
 	}
 	
-	public Notes(String name, String note, ArrayList<File> files) {
+	public Notes(String name, String note, Collection<MultipartFile> files) {
 		this.name = name;
 		this.note = note;
-		this.files = files;
+		this.files = convertFiles(files);
 		try {
 			this.links = findLinks(note);
 		} catch (MalformedURLException e) {
@@ -90,8 +95,9 @@ public class Notes {
 		return files;
 	}
 
-	public void setFiles(ArrayList<File> files) {
-		this.files = files;
+	public void setFiles(Collection<MultipartFile> files) {
+		
+		this.files = convertFiles(files);
 	}
 
 	private ArrayList<URL> findLinks(String note) throws MalformedURLException {
@@ -103,6 +109,30 @@ public class Notes {
 			}
 		}
 		return found;
+	}
+	
+	public File convert(MultipartFile file) throws IOException
+	{    
+	  File convFile = new File(file.getOriginalFilename());
+	  convFile.createNewFile(); 
+	  FileOutputStream fos = new FileOutputStream(convFile); 
+	  fos.write(file.getBytes());
+	  fos.close(); 
+	  return convFile;
+	}
+	
+	public ArrayList<File> convertFiles(Collection<MultipartFile> files){
+		ArrayList<File> convertFile = new ArrayList<>();
+		ArrayList<MultipartFile> toBeFiles = new ArrayList<>(files);
+		for (int i = 0; i < toBeFiles.size(); i++) {
+			try {
+				convertFile.add(convert(toBeFiles.get(i)));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return convertFile;
 	}
 	
 }
