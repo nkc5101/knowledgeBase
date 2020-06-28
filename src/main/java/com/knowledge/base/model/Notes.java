@@ -6,19 +6,42 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 @Entity
 public class Notes {
 	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	 private Integer id;
+	public Integer getId() {
+		return id;
+	}
+
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	private String name;
 	private String note;
 	private ArrayList<URL> links;
 	private ArrayList<File> files;
 	
+	public Notes() {
+		
+	}
+	
 	
 	public Notes(String name, String note) {
 		this.name=name;
 		this.note=note;
+		try {
+			this.links = findLinks(note);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public Notes(String name, String note, ArrayList<File> files) {
@@ -47,6 +70,12 @@ public class Notes {
 
 	public void setNote(String note) {
 		this.note = note;
+		try {
+			this.links = findLinks(note);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public ArrayList<URL> getLinks() {
