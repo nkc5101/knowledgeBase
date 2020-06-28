@@ -97,7 +97,7 @@ public class Notes {
 
 	public void setFiles(Collection<MultipartFile> files) {
 		
-		this.files = convertFiles(files);
+		this.files.addAll(convertFiles(files));
 	}
 
 	private ArrayList<URL> findLinks(String note) throws MalformedURLException {

@@ -50,11 +50,13 @@ public class RestController {
 		if (files.size() == 0) {
 			noteRepo.findById(id).get().setName(name);
 			noteRepo.findById(id).get().setNote(note);
+			noteRepo.save(noteRepo.findById(id).get());
 			return "Note updated.";
 		} else {
 			noteRepo.findById(id).get().setName(name);
 			noteRepo.findById(id).get().setNote(note);
 			noteRepo.findById(id).get().setFiles(files);
+			noteRepo.save(noteRepo.findById(id).get());
 			return "Note updated with files";
 		}
 	}
